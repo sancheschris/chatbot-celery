@@ -45,7 +45,7 @@ services:
     build:
       context: .
     volumes:
-      - ./backend/backend
+      - ./backend:/backend
     command: >
       sh -c "celery -A backend worker -l INFO"
     environment:
