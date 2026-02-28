@@ -1,4 +1,10 @@
+# from openai import OpenAI
+import os
+
+from google import genai
 from django.db import models
+
+from core.tasks import handle_ai_request_job
 
 # Create your models here.
 class AiChatSession(models.Model):
@@ -30,3 +36,32 @@ class AiRequest(models.Model):
     response = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def _queue_job(self):
+        """Add job to queue"""
+        handle_ai_request_job.delay(self.id)
+
+    def handle(self):
+        """Handle request"""
+        self.status = self.RUNNING
+        self.save()
+        client = genai.Client(api_key=os.environ.get("GENAI_API_KEY"))
+        try:
+            completion = client.models.generate_content(
+                model="gemini-3-flash-preview",
+                contents=self.messages
+            )
+            self.response = completion.to_dict()
+            self.status = self.COMPLETE
+        except Exception as e:
+            error_message = str(e)
+            print(f"Error processing AI request {self.id}: {error_message}")
+            self.status = self.FAILED
+        
+        self.save()
+
+    def save(self, **kwargs):
+        is_new = self._state.adding
+        super().save(**kwargs)
+        if is_new:
+            self._queue_job()

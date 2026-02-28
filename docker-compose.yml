@@ -16,6 +16,7 @@ services:
       - DB_PASSWORD=localdevpw
       - CELERY_BROKER_URL=amqp://mquser:bunnypass123@mq:5672//
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GENAI_API_KEY=${GENAI_API_KEY}
     depends_on:
       db:
         condition: service_healthy
@@ -56,6 +57,7 @@ services:
       - DB_PASSWORD=localdevpw
       - CELERY_BROKER_URL=amqp://mquser:bunnypass123@mq:5672//
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GENAI_API_KEY=${GENAI_API_KEY}
     depends_on:
       - backend
       - mq
