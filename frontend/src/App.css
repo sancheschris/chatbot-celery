@@ -36,7 +36,15 @@
     }
 
     .message.user {
-      background-color: #b4d8ff;
+      background-color: #4f8cff;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .message:not(.user) {
+      background-color: #222831;
+      color: #f6f6f6;
+      font-weight: 500;
     }
 
     input {

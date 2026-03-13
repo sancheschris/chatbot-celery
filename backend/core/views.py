@@ -20,7 +20,7 @@ def chat_session(request, session_id):
     serializer = AiChatSessionSerializer(session)
     
     if request.method == 'POST':
-        message = request.data.get('message')
+        message = request.data.get('content')
         if not message:
             return Response({'error': 'Message content is required.'},
                              status=status.HTTP_400_BAD_REQUEST)
