@@ -15,13 +15,13 @@ class AiChatSession(models.Model):
 
     def get_last_request(self):
         """Return the most recent AIRequest or None."""
-        self.airequest_set.all().order_by("-created_at").first()
+        return self.airequest_set.all().order_by("-created_at").first()
 
     def _create_message(self, message, role="user"):
         """Create a new message in the session."""
         return {
             "role": role,
-            "content": message
+            "text": message
         }
     
     def create_first_message(self, message):
