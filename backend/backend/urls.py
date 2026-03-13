@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from core.views import create_chat_session, chat_session
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/chat/sessions/', create_chat_session),
+    path('api/chat/sessions/<str:session_id>/', chat_session),
 ]

@@ -40,11 +40,14 @@ class AiChatSession(models.Model):
         request = self.get_last_request()
 
         if request:
-            all_messages.extend(request.messages)
+            all_messages.extend(request.messages or [])
+            response = request.response or {}
             try:
-                all_messages.append(
-                    request.response.get("raw", {}).get("candidates", [])[0].get("content", {}).get("parts", [])[0].get("text", "")
-                )
+                role = response.get("raw", {}).get("candidates", [])[0].get("content", {}).get("role", "assistant")
+                all_messages.append({
+                    "role": role,
+                    "text": response.get("text", "")
+                })
             except (KeyError, TypeError, IndexError):
                 pass
         
